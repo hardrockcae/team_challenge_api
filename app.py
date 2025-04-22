@@ -69,7 +69,8 @@ def retrain():
         rmse = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
         mape = mean_absolute_percentage_error(y_test, model.predict(X_test))
 
-        with open("ad_model.pkl", "wb") as f:
+        with open("models/ad_model.pkl", "rb") as f:
+
             pickle.dump(model, f)
 
         return f"Model retrained. RMSE: {rmse:.2f}, MAPE: {mape:.2%}"
