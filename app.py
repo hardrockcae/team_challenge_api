@@ -43,12 +43,15 @@ def predict():
     test_data = pd.DataFrame([[tv, radio, newspaper]], columns=["TV", "radio", "newspaper"])
 
     try:
-        with open(MODEL_PATH, "rb") as f:
+        with open("models/ad_model.pkl", "rb") as f:  # Asegúrate de tener esta ruta correcta
             model = pickle.load(f)
     except Exception as e:
         return f"Error loading model: {str(e)}", 500
 
     try:
         prediction = model.predict(test_data)
-        return jsonify({'prediction': float(pred
+        return jsonify({'prediction': float(prediction[0])})  # AQUÍ estaba el paréntesis sin cerrar
+    except Exception as e:
+        return f"Prediction error: {str(e)}", 500
+
 
