@@ -9,7 +9,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
 
 app = Flask(__name__)
 
-# Landing page
+# Ruta al modelo guardado
+MODEL_PATH = os.path.join("models", "ad_model.pkl")
+
 @app.route("/", methods=["GET"])
 def home():
     return (
@@ -41,43 +43,12 @@ def predict():
     test_data = pd.DataFrame([[tv, radio, newspaper]], columns=["TV", "radio", "newspaper"])
 
     try:
-        with open("ad_model.pkl", "rb") as f:
+        with open(MODEL_PATH, "rb") as f:
             model = pickle.load(f)
     except Exception as e:
         return f"Error loading model: {str(e)}", 500
 
     try:
         prediction = model.predict(test_data)
-        return jsonify({'prediction': float(prediction[0])})
-    except Exception as e:
-        return f"Prediction error: {str(e)}", 500
+        return jsonify({'prediction': float(pred
 
-@app.route('/api/v1/retrain', methods=['GET'])
-def retrain():
-    if os.path.exists("data/Advertising_new.csv"):
-        data = pd.read_csv("data/Advertising_new.csv")
-        X_train, X_test, y_train, y_test = train_test_split(
-            data.drop(columns=['sales']),
-            data['sales'],
-            test_size=0.2,
-            random_state=42
-        )
-
-        model = Lasso(alpha=6000)
-        model.fit(X_train, y_train)
-
-        rmse = np.sqrt(mean_squared_error(y_test, model.predict(X_test)))
-        mape = mean_absolute_percentage_error(y_test, model.predict(X_test))
-
-        with open("models/ad_model.pkl", "rb") as f:
-
-            pickle.dump(model, f)
-
-        return f"Model retrained. RMSE: {rmse:.2f}, MAPE: {mape:.2%}"
-    else:
-        return "<h2>New data for retrain NOT FOUND. Nothing done!</h2>"
-
-# Endpoint extra (comentado para redespliegue)
-# @app.route('/api/v1/extra', methods=['GET'])
-# def extra():
-#     return "Este es un endpoint extra para la demo del redespliegue."
