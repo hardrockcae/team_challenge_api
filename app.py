@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     return """
-    <h1>Bienvenido a la API de predicción de ventas </h1>
+    <h1>Bienvenido a la API de predicción de ventas</h1>
     <p>Endpoints disponibles:</p>
     <ul>
         <li><strong>GET /api/v1/predict</strong>: Realiza una predicción pasando TV, radio y newspaper por query string.</li>
@@ -67,7 +67,7 @@ def retrain():
     except Exception as e:
         return f"Error saving model: {str(e)}", 500
 
-    return f"<h2>Modelo reentrenado </h2><p>RMSE: {rmse:.2f}, MAPE: {mape:.2%}</p>"
+    return f"<h2>Modelo reentrenado correctamente</h2><p>RMSE: {rmse:.2f}, MAPE: {mape:.2%}</p>"
 
 if __name__ == '__main__':
     app.run(debug=True)
